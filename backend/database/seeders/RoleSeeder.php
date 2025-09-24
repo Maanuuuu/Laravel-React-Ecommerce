@@ -18,20 +18,11 @@ class RoleSeeder extends Seeder
     {
         $userRole = Role::create(['name' => RolesEnum::user->value]);
         $adminRole = Role::create(['name' => RolesEnum::admin->value]);
-        $vendorRole = Role::create(['name' => RolesEnum::vendor->value]);
 
-        $approveVendorsPermission = Permission::create([
-            'name' => PermissionsEnum::ApproveVendors->value
-        ]);
-        $sellProductsPermission = Permission::create([
-            'name' => PermissionsEnum::SellProducts->value
-        ]);
-        $buyProductsPermission = Permission::create([
-            'name' => PermissionsEnum::BuyProducts->value
-        ]);
-
-        $userRole->syncPermissions([$buyProductsPermission,]);
-        $vendorRole->syncPermissions([$sellProductsPermission,]);
-        $adminRole->syncPermissions([$approveVendorsPermission]);
+        $makeCustomExercisesPermission = Permission::create(['name' => PermissionsEnum::makeCustomExercises->value]);
+        $makeExercisesPermission = Permission::create(['name' => PermissionsEnum::makeExercises->value]);
+        
+        $userRole->syncPermissions([$makeCustomExercisesPermission]);
+        $adminRole->syncPermissions([$makeExercisesPermission]);
     }
 }

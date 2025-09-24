@@ -49,8 +49,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function products()
+    public function exercises()
     {
-        return $this->hasMany(Products::class);
+        return $this->hasMany(ExerciseModel::class);
     }
 }

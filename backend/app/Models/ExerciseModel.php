@@ -5,16 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Products extends Model
+class ExerciseModel extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductsFactory> */
+    /** @use HasFactory<\Database\Factories\ExercisesFactory> */
     use HasFactory;
 
     protected $fillable = [
         'name',
         'description',
-        'price',
-        'stock',
+        'category',
+        'muscle_group',
+        'cover_image',
+        'video_url',
     ];
 
     public function user()
