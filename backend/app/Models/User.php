@@ -51,6 +51,11 @@ class User extends Authenticatable
 
     public function exercises()
     {
-        return $this->hasMany(ExerciseModel::class);
+        return $this->hasMany(Exercise::class);
+    }
+
+    public function customExercises()
+    {
+        return $this->hasMany(CustomExerciseModel::class);
     }
 }

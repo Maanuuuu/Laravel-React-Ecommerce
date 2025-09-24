@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ProductsController;
 use App\Models\Products;
 use Illuminate\Http\Request;
@@ -14,8 +15,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::resource('products', ProductsController::class);
-Route::post('products/create', [ProductsController::class, 'createProduct']);
+Route::post('/exercises', [ExerciseController::class, 'store']);
 
 Route::post('/user/register', [AuthController::class, 'register']);
 Route::post('/user/login', [AuthController::class, 'login']);

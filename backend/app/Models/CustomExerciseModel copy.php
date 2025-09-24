@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExerciseModel extends Model
+class CustomExerciseModel extends Model
 {
     /** @use HasFactory<\Database\Factories\ExercisesFactory> */
     use HasFactory;

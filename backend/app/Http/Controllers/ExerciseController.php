@@ -21,7 +21,25 @@ class ExerciseController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        //
+            $user = $request->user();
+
+            // Solo Admin con permiso puede crear en exercises
+            if ($user->hasRole('admin') && $user->can('makeExercises')) {
+                $fields = $request->validate([
+                    'name' => 'required|string',
+                    'description' => 'required|string',
+                    'category' => 'required|string',
+                    'muscle_group' => 'required|string',
+                    'cover_image' => 'nullable|string',
+                    'video_url' => 'nullable|string',
+                ]);
+
+                $exercise = $request->user()->exercises()->create($fields);
+                return response()->json(["message" => "Ejercicio creado exitosamente.", "exercise" => $exercise], 201);
+            }
+
+            // Si no es admin, rechaza o redirige a custom_exercises
+            return response()->json(['message' => 'No autorizado para crear ejercicios globales. Usa custom exercises.'], 403);
     }
 
     /**
