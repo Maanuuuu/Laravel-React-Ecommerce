@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exercise;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -14,6 +15,12 @@ class ExerciseController extends Controller implements HasMiddleware
         return[
             new Middleware('auth:sanctum', except: ['index', 'show']),
         ];
+    }
+
+    public function index()
+    {
+        $exercises = Exercise::all();
+        return response()->json($exercises);
     }
 
     /**
@@ -47,7 +54,12 @@ class ExerciseController extends Controller implements HasMiddleware
      */
     public function show(string $id)
     {
-        //
+        $exercise = Exercise::find($id);
+        if ($exercise) {
+            return response()->json($exercise);
+        } else {
+            return response()->json(['message' => 'Exercise not found'], 404);
+        }
     }
 
     /**
@@ -55,7 +67,30 @@ class ExerciseController extends Controller implements HasMiddleware
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = $request->user();
+        $exercise = Exercise::find($id);
+
+        if (!$exercise) {
+            return response()->json(['message' => 'Exercise not found'], 404);
+        }
+
+        // Solo Admin con permiso puede actualizar en exercises
+        if ($user->hasRole('admin') && $user->can('makeExercises')) {
+            $fields = $request->validate([
+                'name' => 'sometimes|string',
+                'description' => 'sometimes|string',
+                'category' => 'sometimes|string',
+                'muscle_group' => 'sometimes|string',
+                'cover_image' => 'nullable|string',
+                'video_url' => 'nullable|string',
+            ]);
+
+            $exercise->update($fields);
+            return response()->json(["message" => "Ejercicio actualizado exitosamente.", "exercise" => $exercise], 200);
+        }
+
+        // Si no es admin, rechaza o redirige a custom_exercises
+        return response()->json(['message' => 'No autorizado para actualizar ejercicios globales. Usa custom exercises.'], 403);
     }
 
     /**
@@ -63,6 +98,20 @@ class ExerciseController extends Controller implements HasMiddleware
      */
     public function destroy(string $id)
     {
-        //
+        $user = request()->user();
+        $exercise = Exercise::find($id);
+
+        if (!$exercise) {
+            return response()->json(['message' => 'Exercise not found'], 404);
+        }
+
+        // Solo Admin con permiso puede eliminar en exercises
+        if ($user->hasRole('admin') && $user->can('makeExercises')) {
+            $exercise->delete();
+            return response()->json(['message' => 'Ejercicio eliminado exitosamente.'], 200);
+        }
+
+        // Si no es admin, rechaza o redirige a custom_exercises
+        return response()->json(['message' => 'No autorizado para eliminar ejercicios globales. Usa custom exercises.'], 403);
     }
 }
